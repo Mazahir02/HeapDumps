@@ -1,0 +1,38 @@
+1. Use jmap (most popular)
+
+$JAVA_HOME/bin/jmap -dump:live,format=b,file=<output filename> <PID>
+Above("live" option) runs FullGC in JavaVM before generating heapdump.
+
+$JAVA_HOME/bin/jmap -dump:format=b,file=<output filename> <PID>
+Above is without FullGC.
+
+$JAVA_HOME/bin/jmap -F -dump:format=b,file=heap.bin <PID>
+"-F" is force option. It may be effective when above 2 commands can not generate a heapdump.
+
+======================================
+
+2. Use jcmd
+
+$JAVA_HOME/bin/jcmd <PID> GC.heap_dump <output filename>
+Above(no "-all" option) runs FullGC in JavaVM before generating heapdump.
+
+$JAVA_HOME/bin/jcmd <PID> GC.heap_dump -all <output filename>
+Above is without FullGC.
+
+======================================
+
+3. Use Java Option (recommend in server products)
+
+Set the following Java options to Java arguments
+
+-XX:+HeapDumpOnOutOfMemoryError -XX:HeapDumpPath=<directory name>
+
+=======================================
+
+4. Use gcore and jmap
+
+4-1. generate core file using gcore command
+gcore <PID>
+
+4-2.
+$JAVA_HOME/bin/jmap -dump:format=b,file=<output filename> $JAVA_HOME/bin/java <core filename>
